@@ -11,7 +11,7 @@ var Mongo = require('mongodb').MongoClient; // MongoDB driver
 var keyCache = {}; // public key cache
 
 const MONGO_URL = 'mongodb://localhost:27017/apcsp';
-const CLIENT_ID = '955192429695-5dcrirs5op9vnq8a1t2tvrruhesqcvmc.apps.googleusercontent.com';
+const CLIENT_ID = '707276697593-1bgblmguii0rlvvuje3mug6r4k5384gg.apps.googleusercontent.com';
 
 /**
  * MongoDB operations
@@ -131,13 +131,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(allowCrossDomain);
 app.use(authorize);
 
-app.post('/login', function(req, res) {
+app.post('/login', function (req, res, next) {
     log('/login req.body = ', req.body);
     var query = {
         id: req.body.id
     };
-    Mongo.ops.upsert('login', query, req.body);
-    res.status(201).send('ok');
+    Mongo.ops.insert('login', query, function (err, response) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            //console.log(response);
+            res.status(201).send('ok');
+        }
+    });
+});
+app.post('/add', function (req, res, next) {
+    log('/add req.body =', req.body);
+    var payload = req.body
+    Mongo.ops.insert('add', payload, function (err, response) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            //console.log(response);
+            res.status(201).send('ok');
+        }
+    });
 });
 
 // listen on port 3000
