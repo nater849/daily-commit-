@@ -10,7 +10,7 @@ if (window.location.hostname === '127.0.0.1') {
 
 // prepend the url of node.js server
 function route(url) {
-  return 'http://192.168.1.9:3000' + url;
+  return 'http://10.10.89.185:3000' + url;
 }
 
 var profile;      // google user profile
@@ -67,14 +67,31 @@ function post(url, json, success, error) {
     }
   });
 }
+function addButton(json, url, success, error) {
+    var text = $('#plus-name').val();
+    var jsonData = {
+        id: profile.getId(),
+        text: text
+    };
+    post('/add', jsonData, function () {
+        $('#input').append('<div><strong>' + jsonData.text + '</strong></div>');
+    }, function () {
+        console.log('Error in sending data');
+    });
+}
+
 
 $('#plus-button').click(function() {
     $('#plus-button-dialog').dialog('open');
 });
+$('#plus-add-button').click(function () {
+    addButton('/add');
+    $('#plus-button-dialog').dialog('close');
+});
 
 $('#plus-button-dialog').dialog({
     autoOpen: false,
-    height: 400,
+    height: 100,
     width: 350,
     modal: true,
 });
