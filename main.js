@@ -10,7 +10,7 @@ if (window.location.hostname === '127.0.0.1') {
 
 // prepend the url of node.js server
 function route(url) {
-  return 'http://10.10.89.185:3000' + url;
+  return 'http://10.10.89.211:3000' + url;
 }
 
 var profile;      // google user profile
@@ -37,6 +37,7 @@ function onSignIn(googleUser) {
   $('#photo').html('<img src="' + profile.getImageUrl() + '">');
 }
 
+
 function signOut() {
   gapi.auth2.getAuthInstance().signOut();
   $('.g-signin2').show();
@@ -49,6 +50,23 @@ function disconnect() {
   $('.g-signin2').show();
   $('#email').html('');
   $('#photo').html('');
+}
+
+
+function get(url, success, error) {
+    $.ajax({
+        url: route (url),
+        method: 'GET',
+        headers : {
+            'Authorization' : authResponse.id_token
+        },
+        success : function(data) {
+            if(success) success(data);
+        },
+        errorv: function() {
+            if(error) error(data);
+        }
+    });
 }
 
 function post(url, json, success, error) {
